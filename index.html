@@ -1,1146 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080817">
-<meta name="description" content="Govind's 21st Birthday Experience">
-<title>Govind Turns 21 🎂</title>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-html,body{
-  width:100%;
-  min-height:100%;
-  overflow-x:hidden;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#070714;
-  color:#fff;
-}
-
-button{
-  font:inherit;
-}
-
-button:focus-visible{
-  outline:3px solid #ffd166;
-  outline-offset:4px;
-}
-
-#app{
-  min-height:100vh;
-  position:relative;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 20%,rgba(107,72,180,.18),transparent 35%),
-    radial-gradient(circle at 20% 80%,rgba(255,90,120,.10),transparent 30%),
-    #070714;
-}
-
-#stars{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-  overflow:hidden;
-}
-
-.star{
-  position:absolute;
-  width:2px;
-  height:2px;
-  border-radius:50%;
-  background:#fff;
-  opacity:.65;
-  animation:twinkle 2s infinite alternate;
-}
-
-@keyframes twinkle{
-  from{opacity:.15;transform:scale(.7)}
-  to{opacity:1;transform:scale(1.5)}
-}
-
-.topbar{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  z-index:100;
-  height:58px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 18px;
-  background:rgba(7,7,20,.72);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.brand{
-  font-weight:800;
-  letter-spacing:1px;
-  color:#ffd166;
-}
-
-.sound-btn{
-  border:1px solid rgba(255,209,102,.45);
-  background:rgba(255,209,102,.08);
-  color:#ffd166;
-  border-radius:999px;
-  padding:8px 14px;
-  cursor:pointer;
-}
-
-.progress{
-  position:fixed;
-  top:58px;
-  left:0;
-  right:0;
-  height:3px;
-  background:rgba(255,255,255,.08);
-  z-index:100;
-}
-
-.progress-bar{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#ffd166,#ff6b9d,#a78bfa);
-  transition:width .7s ease;
-}
-
-.scene{
-  min-height:100vh;
-  width:100%;
-  position:absolute;
-  inset:0;
-  z-index:2;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:85px 20px 40px;
-}
-
-.scene.active{
-  display:flex;
-  animation:sceneIn .8s ease both;
-}
-
-@keyframes sceneIn{
-  from{
-    opacity:0;
-    transform:scale(1.03) translateY(20px);
-  }
-  to{
-    opacity:1;
-    transform:scale(1) translateY(0);
-  }
-}
-
-.content{
-  width:min(900px,100%);
-  text-align:center;
-  position:relative;
-  z-index:5;
-}
-
-.kicker{
-  color:#ffd166;
-  text-transform:uppercase;
-  letter-spacing:4px;
-  font-size:12px;
-  font-weight:700;
-  margin-bottom:15px;
-}
-
-h1{
-  font-size:clamp(42px,9vw,92px);
-  line-height:.95;
-  margin-bottom:20px;
-  background:linear-gradient(135deg,#fff,#ffd166,#ff8fab);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-h2{
-  font-size:clamp(28px,6vw,56px);
-  margin-bottom:18px;
-}
-
-p{
-  color:#c8c8d8;
-  line-height:1.7;
-}
-
-.sub{
-  max-width:650px;
-  margin:0 auto 30px;
-  font-size:17px;
-}
-
-.gold{
-  color:#ffd166;
-}
-
-.primary-btn{
-  border:0;
-  cursor:pointer;
-  color:#15101c;
-  font-weight:800;
-  padding:15px 26px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#ffd166,#ffb347);
-  box-shadow:0 10px 35px rgba(255,177,71,.25);
-  transition:.25s;
-}
-
-.primary-btn:hover{
-  transform:translateY(-3px) scale(1.03);
-  box-shadow:0 15px 45px rgba(255,177,71,.4);
-}
-
-.secondary-btn{
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  cursor:pointer;
-  padding:13px 22px;
-  border-radius:999px;
-  transition:.25s;
-}
-
-.secondary-btn:hover{
-  background:rgba(255,255,255,.12);
-  transform:translateY(-2px);
-}
-
-.message{
-  min-height:28px;
-  margin:18px 0;
-  color:#ffd166;
-  font-weight:700;
-}
-
-/* SCENE 1 */
-
-.door-wrap{
-  width:min(420px,85vw);
-  height:480px;
-  margin:25px auto 35px;
-  perspective:1200px;
-  position:relative;
-}
-
-.door-frame{
-  position:absolute;
-  inset:0;
-  border:15px solid #9b6b2d;
-  border-bottom-width:25px;
-  border-radius:12px 12px 5px 5px;
-  background:#18111b;
-  box-shadow:
-    0 30px 80px rgba(0,0,0,.65),
-    inset 0 0 40px rgba(255,209,102,.08);
-}
-
-.door{
-  position:absolute;
-  inset:15px;
-  transform-origin:left center;
-  transition:transform 1.5s cubic-bezier(.2,.8,.2,1);
-  background:
-    linear-gradient(90deg,rgba(255,255,255,.08),transparent 20%),
-    repeating-linear-gradient(
-      90deg,
-      #5b321d 0 35px,
-      #67391f 35px 70px
-    );
-  border:3px solid #b37a32;
-  border-radius:4px;
-  box-shadow:inset 0 0 50px rgba(0,0,0,.55);
-  z-index:3;
-}
-
-.door.open{
-  transform:rotateY(-105deg);
-}
-
-.door-panel{
-  position:absolute;
-  left:35px;
-  right:35px;
-  height:125px;
-  border:3px solid rgba(216,164,76,.5);
-  border-radius:5px;
-}
-
-.door-panel.one{top:35px}
-.door-panel.two{top:190px}
-.door-panel.three{top:345px}
-
-.door-knob{
-  position:absolute;
-  right:28px;
-  top:235px;
-  width:30px;
-  height:30px;
-  border-radius:50%;
-  background:#ffd166;
-  box-shadow:0 0 20px rgba(255,209,102,.5);
-}
-
-.door-text{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  z-index:1;
-}
-
-.door-text strong{
-  font-size:42px;
-  color:#ffd166;
-}
-
-/* SCENE 2 */
-
-.math-card{
-  width:min(520px,100%);
-  margin:auto;
-  padding:35px 25px;
-  border-radius:25px;
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.1);
-  box-shadow:0 30px 90px rgba(0,0,0,.35);
-}
-
-.equation{
-  font-size:clamp(48px,12vw,80px);
-  font-weight:900;
-  margin:20px 0 30px;
-  color:#fff;
-}
-
-.answer-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-}
-
-.answer{
-  padding:18px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.13);
-  background:rgba(255,255,255,.07);
-  color:#fff;
-  cursor:pointer;
-  font-size:22px;
-  font-weight:800;
-  transition:.25s;
-}
-
-.answer:hover{
-  transform:translateY(-3px);
-  background:rgba(255,209,102,.13);
-  border-color:#ffd166;
-}
-
-/* SCENE 3 */
-
-.balloon-area{
-  position:relative;
-  width:min(850px,100%);
-  height:440px;
-  margin:20px auto;
-  overflow:hidden;
-}
-
-.balloon{
-  position:absolute;
-  width:72px;
-  height:90px;
-  border-radius:50% 50% 48% 48%;
-  cursor:pointer;
-  box-shadow:inset -10px -10px 20px rgba(0,0,0,.2),0 15px 25px rgba(0,0,0,.2);
-  animation:float 3s ease-in-out infinite alternate;
-}
-
-.balloon:before{
-  content:"";
-  position:absolute;
-  bottom:-8px;
-  left:50%;
-  transform:translateX(-50%);
-  width:12px;
-  height:12px;
-  background:inherit;
-  clip-path:polygon(0 0,100% 0,50% 100%);
-}
-
-.balloon:after{
-  content:"";
-  position:absolute;
-  top:90px;
-  left:50%;
-  width:1px;
-  height:120px;
-  background:rgba(255,255,255,.4);
-}
-
-.balloon:nth-child(1){left:7%;top:50px;background:#ff5c7a}
-.balloon:nth-child(2){left:23%;top:180px;background:#5ecbff;animation-delay:.3s}
-.balloon:nth-child(3){left:39%;top:40px;background:#ffd166;animation-delay:.6s}
-.balloon:nth-child(4){left:55%;top:180px;background:#a78bfa;animation-delay:.9s}
-.balloon:nth-child(5){left:70%;top:55px;background:#55e6a5;animation-delay:1.2s}
-.balloon:nth-child(6){left:82%;top:210px;background:#ff8f5e;animation-delay:1.5s}
-.balloon:nth-child(7){left:48%;top:290px;background:#ff78c8;animation-delay:1.8s}
-
-@keyframes float{
-  from{transform:translateY(-5px) rotate(-3deg)}
-  to{transform:translateY(10px) rotate(3deg)}
-}
-
-.balloon.popped{
-  animation:pop .35s forwards;
-}
-
-@keyframes pop{
-  0%{transform:scale(1);opacity:1}
-  60%{transform:scale(1.4);opacity:.7}
-  100%{transform:scale(0);opacity:0}
-}
-
-.counter{
-  font-size:20px;
-  color:#ffd166;
-  font-weight:800;
-}
-
-/* SCENE 4 */
-
-.memory{
-  width:min(950px,100%);
-}
-
-.photo-frame{
-  width:min(700px,100%);
-  height:min(62vh,520px);
-  margin:20px auto;
-  padding:10px;
-  border-radius:22px;
-  background:linear-gradient(135deg,#ffd166,#8b5cf6,#ff6b9d);
-  box-shadow:0 30px 100px rgba(0,0,0,.5);
-}
-
-.photo-frame img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  border-radius:15px;
-  background:#080817;
-  display:block;
-}
-
-.photo-caption{
-  margin:15px auto;
-  color:#ddd;
-  min-height:30px;
-}
-
-.photo-controls{
-  display:flex;
-  justify-content:center;
-  gap:12px;
-}
-
-/* SCENE 5 */
-
-.age-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  max-width:700px;
-  margin:30px auto;
-}
-
-.age-btn{
-  padding:25px 10px;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.15);
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  cursor:pointer;
-  font-size:30px;
-  font-weight:900;
-  transition:.25s;
-}
-
-.age-btn:hover{
-  transform:translateY(-6px);
-  border-color:#ffd166;
-  background:rgba(255,209,102,.1);
-}
-
-/* SCENE 6 */
-
-.cake{
-  width:min(620px,100%);
-  height:280px;
-  margin:25px auto;
-  position:relative;
-}
-
-.cake-base{
-  position:absolute;
-  left:50%;
-  bottom:0;
-  transform:translateX(-50%);
-  width:min(500px,85vw);
-  height:120px;
-  border-radius:20px 20px 12px 12px;
-  background:linear-gradient(#f7a9c4,#c94c76);
-  box-shadow:0 20px 50px rgba(0,0,0,.4);
-}
-
-.cake-cream{
-  position:absolute;
-  left:50%;
-  bottom:105px;
-  transform:translateX(-50%);
-  width:min(540px,90vw);
-  height:40px;
-  border-radius:50%;
-  background:#fff3df;
-  box-shadow:0 5px 15px rgba(0,0,0,.2);
-}
-
-.candles{
-  position:absolute;
-  left:50%;
-  bottom:140px;
-  transform:translateX(-50%);
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  gap:6px;
-  width:95%;
-  height:100px;
-}
-
-.candle{
-  position:relative;
-  width:18px;
-  height:65px;
-  background:repeating-linear-gradient(
-    -45deg,
-    #fff 0 8px,
-    #ff7fa8 8px 16px
-  );
-  border-radius:4px;
-  cursor:pointer;
-  transition:.25s;
-}
-
-.candle:nth-child(2n){
-  height:75px;
-}
-
-.candle:nth-child(3n){
-  height:85px;
-}
-
-.flame{
-  position:absolute;
-  left:50%;
-  top:-32px;
-  transform:translateX(-50%);
-  width:17px;
-  height:28px;
-  background:#ffd166;
-  border-radius:50% 50% 50% 10%;
-  box-shadow:0 0 20px #ff9d00;
-  animation:flame .5s infinite alternate;
-}
-
-@keyframes flame{
-  from{transform:translateX(-50%) rotate(-5deg) scale(.9)}
-  to{transform:translateX(-50%) rotate(5deg) scale(1.1)}
-}
-
-.candle.blown .flame{
-  display:none;
-}
-
-.candle.blown{
-  opacity:.55;
-}
-
-.candle-count{
-  color:#bbb;
-}
-
-.candle-count strong{
-  color:#ffd166;
-  font-size:24px;
-}
-
-/* SCENE 7 */
-
-.letter-wrap{
-  width:min(800px,100%);
-  margin:auto;
-}
-
-.envelope{
-  width:min(720px,100%);
-  min-height:420px;
-  padding:45px;
-  margin:auto;
-  border-radius:15px;
-  background:#d8b77b;
-  color:#291b0d;
-  box-shadow:0 35px 100px rgba(0,0,0,.55);
-  cursor:pointer;
-  transition:.6s;
-}
-
-.envelope:hover{
-  transform:translateY(-5px);
-}
-
-.seal{
-  width:78px;
-  height:78px;
-  margin:10px auto 25px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:#8d1f30;
-  color:#ffd166;
-  font-size:30px;
-  box-shadow:0 8px 25px rgba(0,0,0,.25);
-}
-
-.envelope.open{
-  cursor:default;
-}
-
-.envelope.open .seal,
-.envelope.open .open-message{
-  display:none;
-}
-
-.letter{
-  display:none;
-  text-align:left;
-  font-family:Georgia,serif;
-  line-height:1.8;
-}
-
-.envelope.open .letter{
-  display:block;
-  animation:letterIn .9s ease;
-}
-
-@keyframes letterIn{
-  from{opacity:0;transform:translateY(25px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-.letter h2{
-  text-align:center;
-  color:#731525;
-  font-size:34px;
-}
-
-.letter ul{
-  padding-left:25px;
-  margin:15px 0;
-}
-
-/* SCENE 8 */
-
-.final{
-  position:relative;
-  width:min(850px,100%);
-}
-
-.gift{
-  width:230px;
-  height:210px;
-  margin:30px auto;
-  position:relative;
-  cursor:pointer;
-  transition:.5s;
-}
-
-.gift:hover{
-  transform:translateY(-10px) scale(1.04);
-}
-
-.gift-box{
-  position:absolute;
-  bottom:0;
-  left:10px;
-  width:210px;
-  height:140px;
-  background:linear-gradient(135deg,#e63e65,#9d1c42);
-  border-radius:8px;
-  box-shadow:0 20px 50px rgba(0,0,0,.45);
-}
-
-.gift-ribbon-v{
-  position:absolute;
-  left:95px;
-  bottom:0;
-  width:25px;
-  height:140px;
-  background:#ffd166;
-}
-
-.gift-ribbon-h{
-  position:absolute;
-  left:10px;
-  bottom:55px;
-  width:210px;
-  height:25px;
-  background:#ffd166;
-}
-
-.gift-lid{
-  position:absolute;
-  left:0;
-  top:45px;
-  width:230px;
-  height:45px;
-  background:#ff557d;
-  border-radius:7px;
-  z-index:3;
-  transition:.8s;
-}
-
-.gift-bow{
-  position:absolute;
-  left:50%;
-  top:20px;
-  transform:translateX(-50%);
-  width:80px;
-  height:55px;
-  z-index:5;
-}
-
-.gift-bow:before,
-.gift-bow:after{
-  content:"";
-  position:absolute;
-  top:0;
-  width:48px;
-  height:42px;
-  background:#ffd166;
-  border-radius:50% 50% 10% 50%;
-}
-
-.gift-bow:before{
-  left:0;
-  transform:rotate(30deg);
-}
-
-.gift-bow:after{
-  right:0;
-  transform:scaleX(-1) rotate(30deg);
-}
-
-.gift.open .gift-lid{
-  transform:translateY(-90px) rotate(-7deg);
-}
-
-.final-message{
-  display:none;
-}
-
-.final.show .final-message{
-  display:block;
-  animation:finalIn 1s ease;
-}
-
-@keyframes finalIn{
-  from{opacity:0;transform:translateY(25px) scale(.95)}
-  to{opacity:1;transform:translateY(0) scale(1)}
-}
-
-.final.show .gift{
-  animation:giftBounce .7s ease;
-}
-
-@keyframes giftBounce{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.12)}
-  100%{transform:scale(1)}
-}
-
-/* CONFETTI */
-
-#confetti{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:200;
-  overflow:hidden;
-}
-
-.confetti-piece{
-  position:absolute;
-  top:-20px;
-  width:9px;
-  height:15px;
-  animation:confettiFall linear forwards;
-}
-
-@keyframes confettiFall{
-  to{
-    transform:translateY(110vh) rotate(720deg);
-    opacity:0;
-  }
-}
-
-/* FIREWORKS */
-
-.firework{
-  position:fixed;
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  pointer-events:none;
-  z-index:190;
-  animation:firework 1s ease-out forwards;
-  box-shadow:
-    0 -80px 0 2px #ffd166,
-    56px -56px 0 2px #ff6b9d,
-    80px 0 0 2px #5ecbff,
-    56px 56px 0 2px #a78bfa,
-    0 80px 0 2px #55e6a5,
-    -56px 56px 0 2px #ffd166,
-    -80px 0 0 2px #ff6b9d,
-    -56px -56px 0 2px #5ecbff;
-}
-
-@keyframes firework{
-  from{transform:scale(.1);opacity:1}
-  to{transform:scale(1.3);opacity:0}
-}
-
-/* RESPONSIVE */
-
-@media(max-width:700px){
-
-  .topbar{
-    height:52px;
-  }
-
-  .progress{
-    top:52px;
-  }
-
-  .scene{
-    padding-top:78px;
-    padding-bottom:25px;
-    overflow-y:auto;
-  }
-
-  .door-wrap{
-    height:390px;
-    width:300px;
-  }
-
-  .door-panel{
-    left:25px;
-    right:25px;
-    height:95px;
-  }
-
-  .door-panel.one{top:25px}
-  .door-panel.two{top:140px}
-  .door-panel.three{top:255px}
-
-  .door-knob{
-    top:185px;
-  }
-
-  .balloon-area{
-    height:480px;
-  }
-
-  .balloon{
-    width:58px;
-    height:75px;
-  }
-
-  .balloon:after{
-    top:75px;
-  }
-
-  .age-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .candles{
-    gap:2px;
-  }
-
-  .candle{
-    width:11px;
-    height:55px;
-  }
-
-  .candle:nth-child(2n){
-    height:65px;
-  }
-
-  .candle:nth-child(3n){
-    height:72px;
-  }
-
-  .envelope{
-    padding:28px 20px;
-  }
-
-  .letter h2{
-    font-size:28px;
-  }
-
-  .photo-frame{
-    height:52vh;
-  }
-}
-
-@media(max-width:380px){
-  .candle{
-    width:8px;
-  }
-
-  .brand{
-    font-size:13px;
-  }
-
-  .sound-btn{
-    padding:6px 10px;
-    font-size:12px;
-  }
-}
-
-.hidden{
-  display:none!important;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy 21st Birthday Govind!</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #060713;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      text-align: center;
+    }
+    .btn-gold {
+      background: #f59e0b;
+      color: #000;
+      font-weight: 800;
+      border: none;
+      border-radius: 14px;
+      padding: 16px 24px;
+      font-size: 16px;
+      width: 100%;
+      max-width: 280px;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+    .btn-gold:active {
+      transform: scale(0.96);
+    }
+    .door-box {
+      width: 150px;
+      height: 200px;
+      margin: 16px auto;
+      border: 2px solid #f59e0b;
+      border-radius: 80px 80px 8px 8px;
+      background: #3b1d0c;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 340px;
+      margin: 12px auto;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .opt-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .opt-btn:active {
+      background: #f59e0b;
+      color: #000;
+    }
+    .balloons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .balloon-btn {
+      width: 50px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .photo-frame {
+      width: 100%;
+      height: 220px;
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 10px 0;
+      background: #000;
+    }
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .candle-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin: 14px 0;
+    }
+    .candle {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    .flame {
+      width: 10px;
+      height: 14px;
+      background: #f59e0b;
+      border-radius: 50%;
+      margin-bottom: 2px;
+    }
+    .wick {
+      width: 6px;
+      height: 22px;
+      background: #cbd5e1;
+      border-radius: 2px;
+    }
+  </style>
 </head>
-
 <body>
 
-<div id="app">
+  <!-- Audio -->
+  <audio id="audio-player" loop preload="none">
+    <source src="music.mp3" type="audio/mpeg" />
+    <source src="birthday.mp3" type="audio/mpeg" />
+  </audio>
 
-  <div id="stars"></div>
-
-  <header class="topbar">
-    <div class="brand">GOVIND • 21</div>
-    <button id="soundBtn" class="sound-btn" type="button">🔇 Sound Off</button>
+  <!-- Top bar -->
+  <header style="width: 100%; max-width: 340px; display: flex; justify-content: flex-end;">
+    <button type="button" onclick="startOrMuteAudio()" style="background: rgba(0,0,0,0.6); border: 1px solid #f59e0b; color: #fde047; padding: 6px 14px; border-radius: 20px; font-size: 12px; cursor: pointer;">
+      <span id="audio-status">🔈 Sound Off</span>
+    </button>
   </header>
 
-  <div class="progress">
-    <div id="progressBar" class="progress-bar"></div>
-  </div>
+  <main style="width: 100%; max-width: 340px; margin: auto;">
 
-  <!-- SCENE 1 -->
-  <section class="scene active" id="scene1">
-    <div class="content">
+    <!-- SCENE 1: DOOR -->
+    <div id="sc-1" style="display: block;">
+      <p style="color: #f59e0b; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">20 • 09 • 2026</p>
+      <h1 style="font-size: 26px; margin: 6px 0;">Hey Govind...</h1>
+      <p style="color: #94a3b8; font-size: 13px; margin-bottom: 12px;">Something crafted especially for your 21st milestone is waiting behind this door.</p>
 
-      <div class="kicker">20 September • A Secret Awaits</div>
-
-      <div class="door-wrap">
-
-        <div class="door-frame"></div>
-
-        <div class="door-text">
-          <strong>21</strong>
-          <span class="gold">SPECIAL DELIVERY</span>
-        </div>
-
-        <div class="door" id="door">
-          <div class="door-panel one"></div>
-          <div class="door-panel two"></div>
-          <div class="door-panel three"></div>
-          <div class="door-knob"></div>
-        </div>
-
+      <div class="door-box" onclick="goToStep(2)">
+        <div style="border: 1px solid #fde047; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; color: #fde047; font-weight: bold; margin-bottom: 16px;">21</div>
+        <span style="font-size: 11px; color: #fde047; letter-spacing: 1px;">TAP DOOR</span>
       </div>
 
-      <h1>Hey Govind...</h1>
-
-      <p class="sub">
-        Someone has prepared a little birthday adventure for you.
-        But first, you have to unlock the door.
-      </p>
-
-      <button id="enterBtn" class="primary-btn" type="button">
-        🔓 Open the Door
+      <button type="button" class="btn-gold" onclick="goToStep(2)">
+        OPEN YOUR SURPRISE 🎵
       </button>
-
     </div>
-  </section>
 
+    <!-- SCENE 2: BRAIN TEST -->
+    <div id="sc-2" style="display: none;">
+      <p style="color: #f59e0b; font-size: 12px; text-transform: uppercase;">Identity Verification</p>
+      <h2 style="font-size: 22px; margin: 4px 0 10px;">Are you truly Govind?</h2>
+      
+      <div class="card">
+        <p style="font-size: 30px; font-weight: bold; color: #fde047; margin: 8px 0;">2 + 2 = ?</p>
+        <div class="grid-2">
+          <button type="button" class="opt-btn" onclick="checkAnswer(2, this)">2</button>
+          <button type="button" class="opt-btn" onclick="checkAnswer(3, this)">3</button>
+          <button type="button" class="opt-btn" onclick="checkAnswer(4, this)">4</button>
+          <button type="button" class="opt-btn" onclick="checkAnswer(5, this)">5</button>
+        </div>
+        <p id="math-reply" style="color: #f59e0b; font-size: 13px; margin-top: 14px; min-height: 20px;"></p>
+      </div>
+    </div>
 
-  <!-- SCENE 2 -->
-  <section class="scene" id="scene2">
-    <div class="content">
+    <!-- SCENE 3: POP BALLOONS -->
+    <div id="sc-3" style="display: none;">
+      <p style="color: #f59e0b; font-size: 12px; text-transform: uppercase;">Warm-up Mission</p>
+      <h2 style="font-size: 22px; margin: 4px 0 4px;">Pop All 7 Balloons</h2>
+      <p style="color: #94a3b8; font-size: 12px;">Tap every balloon to unlock secret messages</p>
 
-      <div class="kicker">Identity Check</div>
+      <div class="balloons">
+        <button type="button" class="balloon-btn" style="background:#ec4899;" onclick="popOne(this, 'Officially turning 21!')">1</button>
+        <button type="button" class="balloon-btn" style="background:#8b5cf6;" onclick="popOne(this, 'Shaadi swag & royal pagdis.')">2</button>
+        <button type="button" class="balloon-btn" style="background:#3b82f6;" onclick="popOne(this, 'Brotherhood for life.')">3</button>
+        <button type="button" class="balloon-btn" style="background:#10b981;" onclick="popOne(this, 'Unstoppable ambition.')">4</button>
+        <button type="button" class="balloon-btn" style="background:#f59e0b;" onclick="popOne(this, 'Unforgettable moments.')">5</button>
+        <button type="button" class="balloon-btn" style="background:#ef4444;" onclick="popOne(this, 'Endless reasons to smile.')">6</button>
+        <button type="button" class="balloon-btn" style="background:#06b6d4;" onclick="popOne(this, 'Only the beginning...')">7</button>
+      </div>
+      <p id="pop-reply" style="color: #fde047; font-size: 14px; font-weight: bold; min-height: 24px;"></p>
+    </div>
 
-      <h2>Prove you're Govind 😎</h2>
+    <!-- SCENE 4: MEMORY LANE -->
+    <div id="sc-4" style="display: none;">
+      <p style="color: #f59e0b; font-size: 12px; text-transform: uppercase;">Memory Lane</p>
+      <h2 style="font-size: 22px; margin: 4px 0;">Moments Of Govind</h2>
 
-      <div class="math-card">
+      <div class="card">
+        <p id="img-tag" style="color: #f59e0b; font-size: 12px; font-weight: bold; text-transform: uppercase;">Dedication</p>
+        <div class="photo-frame">
+          <img id="img-display" src="1000285479.jpg" alt="Memory[span_1](start_span)"[span_1](end_span) />
+        </div>
+        <p id="img-cap" style="font-size: 13px; color: #e2e8f0; min-height: 38px;">Focused, dedicated, and working hard towards big ambitions.</p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+          <button type="button" onclick="nextPhoto(-1)" style="background:none; border:none; color:#f59e0b; font-weight:bold; font-size:14px; cursor:pointer;">◀ PREV</button>
+          <span id="img-num" style="font-size: 12px; color: #94a3b8; font-family: monospace;">01 / 06</span>
+          <button type="button" onclick="nextPhoto(1)" style="background:none; border:none; color:#f59e0b; font-weight:bold; font-size:14px; cursor:pointer;">NEXT ▶</button>
+        </div>
+      </div>
 
-        <p>Before entering the birthday zone, solve this:</p>
+      <button type="button" class="btn-gold" onclick="goToStep(5)">
+        ONE MORE CHALLENGE ⚡
+      </button>
+    </div>
 
-        <div class="equation">2 + 2 = ?</div>
+    <!-- SCENE 5: QUIZ -->
+    <div id="sc-5" style="display: none;">
+      <p style="color: #f59e0b; font-size: 12px; text-transform: uppercase;">Quick Quiz</p>
+      <h2 style="font-size: 22px; margin: 4px 0 10px;">The 21 Challenge</h2>
 
-        <div class="answer-grid">
+      <div class="card">
+        <p style="font-size: 14px; color: #94a3b8; margin-bottom: 12px;">How old is Govind turning today?</p>
+        <div class="grid-2">
+          <button type="button" class="opt-btn" onclick="checkAge(18, this)">18</button>
+          <button type="button" class="opt-btn" onclick="checkAge(19, this)">19</button>
+          <button type="button" class="opt-btn" onclick="checkAge(20, this)">20</button>
+          <button type="button" class="opt-btn" onclick="checkAge(21, this)">21</button>
+        </div>
+        <p id="age-reply" style="color: #f59e0b; font-size: 13px; margin-top: 14px; min-height: 20px;"></p>
+      </div>
+    </div>
 
-          <button class="answer math-answer" data-answer="3" type="button">3</button>
-          <button class="answer math-answer" data-answer="4" type="button">4</button>
-          <button class="answer math-answer" data-answer="5" type="button">5</button>
-          <button class="answer math-answer" data-answer="22" type="button">22</button>
+    <!-- SCENE 6: 21 CANDLES -->
+    <div id="sc-6" style="display: none;">
+      <p style="color: #f59e0b; font-size: 12px; text-transform: uppercase;">Milestone Tradition</p>
+      <h2 style="font-size: 22px; margin: 4px 0;">Make A Wish, Govind ✨</h2>
+      <p style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">Tap all 21 candles to blow them out</p>
 
+      <div class="card">
+        <div id="candles-box" class="candle-grid"></div>
+        <div style="background: #78350f; border: 2px solid #f59e0b; border-radius: 12px; padding: 12px; font-weight: bold; color: #fef08a;">
+          TURNING 21
+        </div>
+        <p id="candle-status" style="color: #f59e0b; font-size: 12px; font-family: monospace; margin-top: 10px; font-weight: bold;">21 CANDLES LIT</p>
+      </div>
+    </div>
+
+    <!-- SCENE 7: LETTER -->
+    <div id="sc-7" style="display: none;">
+      <p style="color: #f59e0b; font-size: 12px; text-transform: uppercase;">Personal Note</p>
+      <h2 style="font-size: 22px; margin: 4px 0 10px;">A Letter For You</h2>
+
+      <div class="card">
+        <div id="envelope-closed" onclick="document.getElementById('envelope-closed').style.display='none'; document.getElementById('envelope-open').style.display='block';" style="cursor: pointer; padding: 16px 0;">
+          <div style="font-size: 48px; margin-bottom: 10px;">💌</div>
+          <button type="button" class="btn-gold" style="width: auto; padding: 10px 20px;">OPEN LETTER ❤️</button>
         </div>
 
-        <div id="mathMessage" class="message"></div>
+        <div id="envelope-open" style="display: none; text-align: left;">
+          <p style="color: #f59e0b; font-size: 11px; font-family: monospace;">20 • 09 • 2026</p>
+          <p style="font-size: 13px; line-height: 1.6; color: #e2e8f0; margin-top: 8px; white-space: pre-line;">
+Dear Govind,
 
+Today isn't just another birthday. It marks the milestone arrival of your 21st year.
+
+From your dedication and focus, to rocking traditional pagdis at family weddings, and sharing unforgettable laughs with your brothers—you bring genuine warmth, respect, and character everywhere.
+
+May your 21st year bring you:
+• Unstoppable success in all your goals
+• Countless adventures with your brothers
+• Genuine prosperity, joy, and peace of mind
+
+Happy 21st Birthday, Govind! ❤️
+          </p>
+          <button type="button" class="btn-gold" onclick="goToStep(8)">ONE LAST SURPRISE 🎁</button>
+        </div>
       </div>
-
     </div>
-  </section>
 
+    <!-- SCENE 8: FINALE -->
+    <div id="sc-8" style="display: none;">
+      <p style="color: #f59e0b; font-size: 12px; letter-spacing: 2px; font-weight: bold; text-transform: uppercase;">HAPPY 21st BIRTHDAY</p>
+      <h1 style="font-size: 38px; color: #facc15; margin: 4px 0;">GOVIND</h1>
+      <p style="color: #94a3b8; font-size: 12px; margin-bottom: 16px;">20 SEPTEMBER 2026</p>
 
-  <!-- SCENE 3 -->
-  <section class="scene" id="scene3">
-    <div class="content">
-
-      <div class="kicker">Birthday Mission #1</div>
-
-      <h2>Pop all 7 balloons 🎈</h2>
-
-      <p class="sub">
-        Tap every balloon to unlock the memories.
-      </p>
-
-      <div class="counter">
-        Balloons popped:
-        <span id="balloonCount">0</span>/7
+      <div class="card" onclick="document.getElementById('gift-lead').innerHTML='<span style=\'color:#fde047; font-weight:bold; display:block;\'>Govind’s 21st Year:</span>Endless success, big milestones, brotherly bonds, and boundless happiness!'; document.getElementById('gift-emoji').innerText='🌟';" style="cursor: pointer;">
+        <div id="gift-emoji" style="font-size: 46px; margin-bottom: 8px;">🎁</div>
+        <p id="gift-lead" style="font-size: 13px; color: #cbd5e1;">Tap the gift box to reveal your final blessing</p>
       </div>
 
-      <div class="balloon-area" id="balloonArea">
-
-        <button class="balloon" type="button" aria-label="Pop balloon"></button>
-        <button class="balloon" type="button" aria-label="Pop balloon"></button>
-        <button class="balloon" type="button" aria-label="Pop balloon"></button>
-        <button class="balloon" type="button" aria-label="Pop balloon"></button>
-        <button class="balloon" type="button" aria-label="Pop balloon"></button>
-        <button class="balloon" type="button" aria-label="Pop balloon"></button>
-        <button class="balloon" type="button" aria-label="Pop balloon"></button>
-
-      </div>
-
-      <div id="balloonMessage" class="message"></div>
-
+      <button type="button" onclick="location.reload()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 14px; padding: 12px; font-size: 13px; margin-top: 16px; width: 100%; max-width: 280px; cursor: pointer;">
+        PLAY EXPERIENCE AGAIN ↺
+      </button>
     </div>
-  </section>
 
+  </main>
 
-  <!-- SCENE 4 -->
-  <section class="scene" id="scene4">
-    <div class="content memory">
+  <footer style="color: #64748b; font-size: 10px; letter-spacing: 1px; padding-top: 8px;">
+    GOVIND • 21st BIRTHDAY • 20 SEPTEMBER 2026
+  </footer>
 
-      <div class="kicker">Memory Lane</div>
+  <script>
+    // Direct scene switcher
+    function goToStep(stepNumber) {
+      for (var s = 1; s <= 8; s++) {
+        var el = document.getElementById('sc-' + s);
+        if (el) el.style.display = 'none';
+      }
+      var target = document.getElementById('sc-' + stepNumber);
+      if (target) target.style.display = 'block';
+      
+      // Auto-trigger audio attempt on any navigation
+      try {
+        var audio = document.getElementById('audio-player');
+        if (audio && audio.paused) {
+          audio.play().then(function() {
+            document.getElementById('audio-status').innerText = "🔊 Sound On";
+          }).catch(function() {});
+        }
+      } catch(e) {}
+    }
 
-      <h2>21 years. So many memories. ❤️</h2>
+    // Audio button toggle
+    function startOrMuteAudio() {
+      var audio = document.getElementById('audio-player');
+      if (!audio) return;
+      if (audio.paused) {
+        audio.play().then(function() {
+          document.getElementById('audio-status').innerText = "🔊 Sound On";
+        }).catch(function() {});
+      } else {
+        audio.pause();
+        document.getElementById('audio-status').innerText = "🔈 Sound Off";
+      }
+    }
 
-      <p class="sub">
-        Take a little trip through the moments.
-      </p>
+    // Scene 2: Math
+    function checkAnswer(val, btn) {
+      var reply = document.getElementById('math-reply');
+      if (val === 4) {
+        btn.style.background = "#10b981";
+        reply.innerText = "Correct! 🎈";
+        setTimeout(function() { goToStep(3); }, 500);
+      } else {
+        reply.innerText = "Are you sure? 😂 Try again!";
+      }
+    }
 
-      <div class="photo-frame">
-        <img id="memoryImage" src="1000285479.jpg" alt="Govind memory">
-      </div>
+    // Scene 3: Balloons
+    var poppedTotal = 0;
+    function popOne(btn, msg) {
+      if (btn.style.opacity === '0') return;
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+      poppedTotal++;
+      document.getElementById('pop-reply').innerText = '"' + msg + '"';
+      if (poppedTotal >= 7) {
+        document.getElementById('pop-reply').innerText = "BALLOON MISSION COMPLETE 🎈";
+        setTimeout(function() { goToStep(4); }, 600);
+      }
+    }
 
-      <div id="photoCaption" class="photo-caption">
-        Memory 1 of 6
-      </div>
+    // Scene 4: Photos
+    var album = [
+      { img: "1000285479.jpg", tag: "Dedication", cap: "Focused, dedicated, and working hard towards big ambitions." },
+  
+      { img: "1000285478.jpg", tag: "Golden Sunset", cap: "Golden hour brotherhood. Standing together towards endless horizons." },
+      { img: "1000285476.jpg", tag: "Festival Of Colors", cap: "Holi colors & endless laughter. Unbreakable bonds that last forever." },
+      { img: "1000285477.jpg", tag: "Desi Roots", cap: "Simple moments and calm breezes in the countryside." },
+      { img: "1000285590.png", tag: "Brothers For Life", cap: "Street smiles, big dreams, and unstoppable 21st energy." }
+    ];
+    var pIdx = 0;
 
-      <div class="photo-controls">
+    function nextPhoto(step) {
+      pIdx = (pIdx + step + 6) % 6;
+      var cur = album[pIdx];
+      document.getElementById('img-tag').innerText = cur.tag;
+      document.getElementById('img-display').src = cur.img;
+      document.getElementById('img-cap').innerText = cur.cap;
+      document.getElementById('img-num').innerText = "0" + (pIdx + 1) + " / 06";
+    }
 
-        <button id="prevPhoto" class="secondary-btn" type="button">
-          ← Previous
-        </button>
+    // Scene 5: Quiz
+    function checkAge(age, btn) {
+      var reply = document.getElementById('age-reply');
+      if (age === 21) {
+        btn.style.background = "#f59e0b";
+        btn.style.color = "#000";
+        reply.innerText = "YES! Welcome to 21 ✨";
+        setTimeout(function() { goToStep(6); }, 500);
+      } else {
+        reply.innerText = "Nice try 😏 Try again!";
+      }
+    }
 
-        <button id="nextPhoto" class="primary-btn" type="button">
-          Next Memory →
-        </button>
-
-      </div>
-
-      <div id="memoryMessage" class="message"></div>
-
-    </div>
-  </section>
-
-
-  <!-- SCENE 5 -->
-  <section class="scene" id="scene5">
-    <div class="content">
-
-      <div class="kicker">Birthday Mission #2</div>
-
-      <h2>How old is Govind today? 🎂</h2>
-
-      <p class="sub">
-        One answer unlocks the next chapter.
-      </p>
-
-      <div class="age-grid">
-
-        <button class="age-btn" data-age="18" type="button">18</button>
-        <button class="age-btn" data-age="19" type="button">19</button>
-        <button class="age-btn" data-age="20" type="button">20</button>
-        <button class="age-btn" data-age="21" type="button">21</button>
-
-      </div>
-
-      <div id="ageMessage" class="message"></div>
-
-    </div>
-  </section>
-
-
-  <!-- SCENE 6 -->
-  <section class="scene" id="scene6">
-    <div class="content">
-
-      <div class="kicker">The Final Challenge</div>
-
-      <h2>Make a wish. Blow out 21 candles. 🕯️</h2>
-
-      <p class="sub">
-        Tap each candle to blow it out.
-      </p>
-
-      <div class="cake">
-
-        <div class="candles" id="cand
+    // Scene 6: Build Candles
+    var candlesOut = 0;
+    var cHolder = document.getElementById('candles-box');
+    if (cHolder) {
+      for (var i = 0; i < 21; i++) {
+        var c = document.createElement('button');
+        c.type = 'button';
+        c.className = 'candle';
+        c.innerHTML = '<div class="flame"></div><div class="wick"></div>';
+        c.onclick = function() {
+          var flame = this.querySelector('.flame');
+          if (flame && flame.style.opacity !== '0') {
+            flame.style.opacity = '0';
+            candlesOut++;
+            var left = 21 - candlesOut;
+            document.getElementById('candle-status').innerText = left > 0 ? left + " CANDLES LEFT" : "ALL WISHES SEALED ✨";
+            if (candlesOut >= 21) {
+              setTimeout(function() { goToStep(7); }, 600);
+            }
+          }
+        };
+        cHolder.appendChild(c);
+      }
+    }
+  </script>
+</body>
+</html>
