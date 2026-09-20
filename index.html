@@ -46,7 +46,7 @@
     }
     .door-panel {
       transform-origin: left center;
-      transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .door-open {
       transform: rotateY(-112deg);
@@ -64,7 +64,7 @@
     /* Balloon Float Animation */
     @keyframes gentle-float {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-12px) rotate(3deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
     }
     .floating-balloon {
       animation: gentle-float 3s infinite ease-in-out;
@@ -88,16 +88,13 @@
 
   <!-- Audio Element -->
   <audio id="bg-audio" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg" />
     <source src="birthday.mp3" type="audio/mpeg" />
   </audio>
 
-  <!-- Header / Controls Bar -->
-  <header class="relative z-30 flex items-center justify-between w-full max-w-md mx-auto pt-1 px-2">
-    <div id="scene-indicator" class="text-xs tracking-widest font-semibold uppercase px-3 py-1 rounded-full border border-amber-500/30 bg-black/40 backdrop-blur text-amber-300">
-      CHAPTER 1 / 8
-    </div>
-    
-    <button id="sound-btn" class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border border-amber-500/30 bg-black/40 backdrop-blur text-amber-300 active:scale-95 transition-all">
+  <!-- Header / Controls Bar (Chapter counter removed) -->
+  <header class="relative z-30 flex items-center justify-end w-full max-w-md mx-auto pt-1 px-2">
+    <button id="sound-btn" class="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-amber-500/30 bg-black/40 backdrop-blur text-amber-300 active:scale-95 transition-all shadow-md">
       <span id="sound-icon">🔈</span>
       <span id="sound-status">Sound Off</span>
     </button>
@@ -106,14 +103,14 @@
   <!-- Central Dynamic Screen Container -->
   <main id="app-container" class="relative z-20 flex-1 w-full max-w-md mx-auto flex flex-col justify-center items-center my-auto"></main>
 
-  <!-- Footer Info Bar -->
+  <!-- Footer Info Bar (No Dr.) -->
   <footer class="relative z-30 w-full max-w-md mx-auto pb-1 text-center text-[10px] text-slate-500 tracking-wider">
-    DR. GOVIND • 21st BIRTHDAY • 20 SEPTEMBER 2026
+    GOVIND • 21st BIRTHDAY • 20 SEPTEMBER 2026
   </footer>
 
   <script>
     /* ====================================================================
-       1. PERSONAL CONFIGURATION (6 CURATED MEMORIES)
+       1. PERSONAL CONFIGURATION (No Dr. references)
        ==================================================================== */
     const birthdayConfig = {
       name: "Govind",
@@ -122,12 +119,12 @@
       memories: [
         {
           image: "1000285479.jpg",
-          caption: "White coat & stethoscope. Healing hands and a bright future in medicine.",
-          tag: "Dr. Govind"
+          caption: "Focused, dedicated, and working hard towards big ambitions.",
+          tag: "Dedication"
         },
         {
           image: "1000285596.jpg",
-          caption: "Pagdi, garlands, & royal traditions. Celebrating brotherhood in true style.",
+          caption: "Pagdi, garlands, & royal traditions. Celebrating in true brotherly style.",
           tag: "Shaadi Swag"
         },
         {
@@ -153,39 +150,42 @@
       ],
       personalLetter: `Dear Govind,
 
-Today isn't just another birthday. It marks the milestone arrival of your 21st chapter.
+Today isn't just another birthday. It marks the milestone arrival of your 21st year.
 
-From the dedication of your stethoscope in hospital wards to rocking traditional pagdis at family weddings and sharing unforgettable laughs on rural roads—you bring genuine warmth, respect, and character everywhere.
+From your relentless dedication and focus, to rocking traditional pagdis at family weddings, and sharing unforgettable laughs with your brothers—you bring genuine warmth, respect, and character everywhere you go.
 
 May your 21st year bring you:
-• Unstoppable success in your medical journey
+• Unstoppable success in all your goals
 • Countless adventures and celebrations with your brothers
-• Genuine prosperity, joy, and peace of mind
+• Genuine prosperity, happiness, and peace of mind
 
-Keep smiling, keep elevating everyone around you, and enjoy every second of turning 21!
+Keep smiling, keep inspiring everyone around you, and enjoy every single second of being 21!
 
 Happy 21st Birthday, Govind! ❤️`
     };
 
     /* ====================================================================
-       2. AUDIO ENGINE (MP3 + Sound Effects)
+       2. ERROR-SAFE AUDIO ENGINE
        ==================================================================== */
     const bgAudio = document.getElementById('bg-audio');
     let isSoundOn = false;
     let sfxCtx = null;
 
     function initSFX() {
-      if (!sfxCtx) {
-        sfxCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (sfxCtx.state === 'suspended') {
-        sfxCtx.resume();
+      try {
+        if (!sfxCtx) {
+          sfxCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (sfxCtx && sfxCtx.state === 'suspended') {
+          sfxCtx.resume();
+        }
+      } catch (e) {
+        console.warn("AudioContext skipped", e);
       }
     }
 
     function playTone(freq, type = 'sine', duration = 0.2, vol = 0.15) {
-      if (!isSoundOn) return;
-      initSFX();
+      if (!isSoundOn || !sfxCtx) return;
       try {
         const osc = sfxCtx.createOscillator();
         const gain = sfxCtx.createGain();
@@ -218,16 +218,26 @@ Happy 21st Birthday, Govind! ❤️`
     function startMusic() {
       initSFX();
       isSoundOn = true;
-      document.getElementById('sound-status').innerText = "Sound On";
-      document.getElementById('sound-icon').innerText = "🔊";
-      bgAudio.play().catch(() => {});
+      const statusEl = document.getElementById('sound-status');
+      const iconEl = document.getElementById('sound-icon');
+      if (statusEl) statusEl.innerText = "Sound On";
+      if (iconEl) iconEl.innerText = "🔊";
+      
+      if (bgAudio) {
+        const p = bgAudio.play();
+        if (p !== undefined) {
+          p.catch(err => console.log("Autoplay deferred:", err));
+        }
+      }
     }
 
     function pauseMusic() {
       isSoundOn = false;
-      document.getElementById('sound-status').innerText = "Sound Off";
-      document.getElementById('sound-icon').innerText = "🔈";
-      bgAudio.pause();
+      const statusEl = document.getElementById('sound-status');
+      const iconEl = document.getElementById('sound-icon');
+      if (statusEl) statusEl.innerText = "Sound Off";
+      if (iconEl) iconEl.innerText = "🔈";
+      if (bgAudio) bgAudio.pause();
     }
 
     document.getElementById('sound-btn').addEventListener('click', () => {
@@ -297,15 +307,13 @@ Happy 21st Birthday, Govind! ❤️`
     renderFireworks();
 
     /* ====================================================================
-       4. SCENE CONTROLLER & CORE LOGIC
+       4. SCENE CONTROLLER (Zero Chapter numbers displayed)
        ==================================================================== */
     let currentScene = 1;
     const container = document.getElementById('app-container');
-    const indicator = document.getElementById('scene-indicator');
 
     function updateScene(num) {
       currentScene = num;
-      indicator.innerText = `CHAPTER ${currentScene} / 8`;
       container.innerHTML = '';
 
       switch (num) {
@@ -347,27 +355,38 @@ Happy 21st Birthday, Govind! ❤️`
       const doorBtn = document.getElementById('open-door-btn');
       const doorPanel = document.getElementById('door-panel');
       const doorLight = document.getElementById('door-light');
+      let unlocked = false;
 
       function unlock() {
-        startMusic();
-        doorPanel.classList.add('door-open');
-        doorLight.classList.remove('opacity-0');
-        doorLight.classList.add('opacity-100');
-        sfxGrand();
+        if (unlocked) return;
+        unlocked = true;
 
-        confetti({
-          particleCount: 50,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+        try { startMusic(); } catch(e) {}
+        try { sfxGrand(); } catch(e) {}
+
+        if (doorPanel) doorPanel.classList.add('door-open');
+        if (doorLight) {
+          doorLight.classList.remove('opacity-0');
+          doorLight.classList.add('opacity-100');
+        }
+
+        try {
+          if (typeof confetti === 'function') {
+            confetti({
+              particleCount: 50,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+          }
+        } catch(e) {}
 
         setTimeout(() => {
           updateScene(2);
-        }, 1500);
+        }, 1200);
       }
 
-      doorBtn.addEventListener('click', unlock);
-      doorPanel.addEventListener('click', unlock);
+      if (doorBtn) doorBtn.addEventListener('click', unlock);
+      if (doorPanel) doorPanel.addEventListener('click', unlock);
     }
 
     /* SCENE 2: BIRTHDAY BRAIN TEST */
@@ -401,19 +420,21 @@ Happy 21st Birthday, Govind! ❤️`
         btn.addEventListener('click', () => {
           const val = btn.getAttribute('data-val');
           if (val === "4") {
-            sfxCorrect();
-            feedback.innerText = "Correct! The birthday brain is razor sharp! 🎈";
+            try { sfxCorrect(); } catch(e) {}
+            if (feedback) feedback.innerText = "Correct! The birthday brain is razor sharp! 🎈";
             btn.classList.add('bg-emerald-500/30', 'border-emerald-400', 'text-emerald-300');
-            confetti({ particleCount: 40, spread: 60 });
+            try { confetti({ particleCount: 40, spread: 60 }); } catch(e) {}
             setTimeout(() => {
               updateScene(3);
-            }, 1200);
+            }, 1000);
           } else {
-            sfxWrong();
-            feedback.innerText = "Are you sure? 😂 Try again!";
-            card.classList.remove('shake-anim');
-            void card.offsetWidth;
-            card.classList.add('shake-anim');
+            try { sfxWrong(); } catch(e) {}
+            if (feedback) feedback.innerText = "Are you sure? 😂 Try again!";
+            if (card) {
+              card.classList.remove('shake-anim');
+              void card.offsetWidth;
+              card.classList.add('shake-anim');
+            }
           }
         });
       });
@@ -423,10 +444,10 @@ Happy 21st Birthday, Govind! ❤️`
     function renderScene3() {
       const messages = [
         "Officially turning 21!",
-        "Dr. Govind in the making!",
         "Shaadi swag & royal pagdis.",
         "Brotherhood for life.",
         "Unstoppable ambition.",
+        "Unforgettable moments.",
         "Endless reasons to smile.",
         "Only the beginning..."
       ];
@@ -467,40 +488,22 @@ Happy 21st Birthday, Govind! ❤️`
         `;
 
         b.addEventListener('click', () => {
-          sfxPop();
-          display.innerText = `"${msg}"`;
+          try { sfxPop(); } catch(e) {}
+          if (display) display.innerText = `"${msg}"`;
           b.style.transform = 'scale(0)';
           b.style.opacity = '0';
           b.style.pointerEvents = 'none';
           popped++;
 
-          confetti({
-            particleCount: 15,
-            spread: 40,
-            origin: { x: (b.offsetLeft + 20) / window.innerWidth, y: (b.offsetTop + 100) / window.innerHeight }
-          });
+          try {
+            confetti({
+              particleCount: 15,
+              spread: 40,
+              origin: { x: (b.offsetLeft + 20) / window.innerWidth, y: (b.offsetTop + 100) / window.innerHeight }
+            });
+          } catch(e) {}
 
           if (popped === messages.length) {
-            sfxGrand();
-            confetti({ particleCount: 75, spread: 80 });
-            display.innerText = "BALLOON MISSION COMPLETE 🎈";
-            setTimeout(() => {
-              updateScene(4);
-            }, 1300);
-          }
-        });
-
-        area.appendChild(b);
-      });
-    }
-
-    /* SCENE 4: MEMORY LANE CAROUSEL (6 PHOTOS INCLUDING WEDDING TURBAN PHOTO) */
-    function renderScene4() {
-      let activeIndex = 0;
-      const total = birthdayConfig.memories.length;
-
-      container.innerHTML = `
-        <div class="text-center w-full px-4 flex flex-col items-center">
-          <span class="text-xs font-semibold uppercase tracking-wider text-amber-400 mb-1">Memory Lane</span>
-          <h2 class="text-2xl font-serif-title font-bold text-slate-100 mb-1">Moments Of Govind</h2>
-          <p class="text-xs te
+            try { sfxGrand(); } catch(e) {}
+            try { confetti({ particleCount: 75, spread: 80 }); } catch(e) {}
+  
